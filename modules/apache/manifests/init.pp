@@ -1,12 +1,5 @@
 class apache {
-      # Install Apache
-  Exec { path => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/sbin"}
 
-  exec { 'apt-update':
-    command => '/usr/bin/apt-get update'
-  }
-  # make sure apt-update run before package
-  Exec["apt-update"] -> Package <| |>
 
   package { 'apache2':
     ensure => installed,
@@ -25,23 +18,32 @@ class apache {
 		command => "a2enmod rewrite",
 	}
 
-	file { "/etc/apache2/mods-available/mpm_prefork.conf":
+# /etc/apache2/sites-available/wordpress.conf
+  file { "/etc/apache2/sites-available/wordpress.conf":
 		ensure => present,
-		content => "<IfModule mpm_prefork_module>
-        StartServers                     5
-        MinSpareServers           5
-        MaxSpareServers          10
-        MaxRequestWorkers         80
-        MaxConnectionsPerChild   0
-</IfModule>",
-		require => Package["apache2"],
+		content => "<VirtualHost *:80>
+    DocumentRoot /srv/www/wordpress/
+    <Directory /srv/www/wordpress/>
+        Options FollowSymLinks
+        AllowOverride Limit Options FileInfo
+        DirectoryIndex index.php
+        Require all granted
+    </Directory>
+    <Directory /srv/www/wordpress/wp-content>
+        Options FollowSymLinks
+        Require all granted
+    </Directory>
+</VirtualHost>",
+		require => [Package["apache2"], Service["apache2"]],
+		before => Exec["enable-wordpress-site"],
 		notify => Exec["restart-apache"]
 	}
-	
-	exec { "enable-prefork":
+  
+  exec { "enable-wordpress-site":
 		require => Package["apache2"],
-		command => "a2dismod mpm_event && a2enmod mpm_prefork",
+		command => "a2ensite wordpress && a2dissite 000-default",
 	}
+	
 
   exec { "restart-apache":
 		command => "service apache2 restart",
@@ -57,6 +59,31 @@ class apache {
   package { 
     "php-mysql": ensure => latest 
   }
+  package { 
+    "php-curl": ensure => latest 
+  }
+  package { 
+    "php-bcmath": ensure => latest 
+  }
+  package { 
+    "php-intl": ensure => latest 
+  }
+  package { 
+    "php-json": ensure => latest 
+  }
+
+  package { 
+    "php-imagick": ensure => latest 
+  }
+  package {
+    "php-mbstring": ensure => latest 
+  }
+  package {
+    "php-xml": ensure => latest 
+  }
+  package {
+    "php-zip": ensure => latest 
+  }
 
   package { 
     "libapache2-mod-php": ensure => latest,
@@ -64,5 +91,5 @@ class apache {
 		notify => Exec["restart-apache"] 
   }
 
-  #php libapache2-mod-php php-mysql
+
 }

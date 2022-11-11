@@ -38,6 +38,14 @@ class apache {
 		before => Exec["enable-wordpress-site"],
 		notify => Exec["restart-apache"]
 	}
+
+  # /file { "/etc/apache2/ports.conf":
+  # /  ensure => present,
+  # /  content =>  "Listen 8081 ",
+  # /	require => [Package["apache2"], Service["apache2"]],
+  # /  before => Exec["enable-wordpress-site"],
+	# /	notify => Exec["restart-apache"]
+  # /  }
   
   exec { "enable-wordpress-site":
 		require => Package["apache2"],

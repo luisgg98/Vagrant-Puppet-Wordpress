@@ -17,7 +17,6 @@ class wordpress {
         ensure => present,
         require => Exec['copy'],
         content => template("wordpress/wp-config.php.erb")
-
     }
     exec{
       "Change owner":

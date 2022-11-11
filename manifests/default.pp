@@ -19,6 +19,6 @@ Exec["apt-update"] -> Package <| |>
 
 include apache
 include database
-include wordpress 
+include wordpress
 
 

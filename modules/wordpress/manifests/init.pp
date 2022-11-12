@@ -11,8 +11,7 @@ class wordpress {
     exec { 'copy':
         command => "curl https://wordpress.org/latest.tar.gz | tar zx -C /srv/www"
     }
-
-    # Generate the wp-config.php file using the template
+    
     file { '/srv/www/wordpress/wp-config.php':
         ensure => present,
         require => Exec['copy'],
@@ -22,4 +21,15 @@ class wordpress {
       "Change owner":
       command => "chown -R www-data: /srv/www && chmod 755 -R ."
     }
+
+    exec{
+      "Install WP CLI":
+      command => "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp"
+    }
+
+    exec{
+      "Configure Wordpress with WP CLI":
+      command => 'wp core install --url="http://127.0.0.1" --title="Herramientas de automatización de despliegues: Luis Garcia" --admin_user="wordpress" --admin_password="wordpress23*" --admin_email="lggarcia@gmail.com" --allow-root --path="/srv/www/wordpress"'
+    }
+
 }

@@ -16,7 +16,9 @@ exec { 'apt-update':
   }
 # make sure apt-update run before package
 Exec["apt-update"] -> Package <| |>
-
+# password :tvxJ*(FIaUw0(ADFZB
+#admin
+#admin@example.com
 include apache
 include database
 include wordpress

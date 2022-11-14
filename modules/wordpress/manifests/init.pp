@@ -6,7 +6,6 @@ class wordpress {
       command => "mkdir -p /srv/www/"
     }
 
-
     # Copy to /srv/www/wordpress/
     exec { 'copy':
         command => "curl https://wordpress.org/latest.tar.gz | tar zx -C /srv/www"

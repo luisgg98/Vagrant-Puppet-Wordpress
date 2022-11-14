@@ -1,6 +1,5 @@
 class apache {
 
-
   package { 'apache2':
     ensure => installed,
   }
@@ -14,11 +13,9 @@ class apache {
   exec { "enable-mod_rewrite":
 		require => Package["apache2"],
 		before => Service["apache2"],
-		#command => "/usr/sbin/a2enmod rewrite",
 		command => "a2enmod rewrite",
 	}
 
-# /etc/apache2/sites-available/wordpress.conf
   file { "/etc/apache2/sites-available/wordpress.conf":
 		ensure => present,
 		content => "<VirtualHost *:80>
@@ -39,26 +36,16 @@ class apache {
 		notify => Exec["restart-apache"]
 	}
 
-  # /file { "/etc/apache2/ports.conf":
-  # /  ensure => present,
-  # /  content =>  "Listen 8081 ",
-  # /	require => [Package["apache2"], Service["apache2"]],
-  # /  before => Exec["enable-wordpress-site"],
-	# /	notify => Exec["restart-apache"]
-  # /  }
-  
   exec { "enable-wordpress-site":
 		require => Package["apache2"],
 		command => "a2ensite wordpress && a2dissite 000-default",
 	}
 	
-
   exec { "restart-apache":
 		command => "service apache2 restart",
 		require => Package["apache2"],
 		refreshonly => true
 	}
-
 
   # Add support for PHP 
   package {
@@ -79,7 +66,6 @@ class apache {
   package { 
     "php-json": ensure => latest 
   }
-
   package { 
     "php-imagick": ensure => latest 
   }
@@ -98,6 +84,5 @@ class apache {
   	require => Package["apache2"],
 		notify => Exec["restart-apache"] 
   }
-
 
 }

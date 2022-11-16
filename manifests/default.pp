@@ -7,6 +7,7 @@ exec { 'apt-update':
 # make sure apt-update run before package
 Exec["apt-update"] -> Package <| |>
 
+include wpconfiguration
 include apache
 include database
 include wordpress

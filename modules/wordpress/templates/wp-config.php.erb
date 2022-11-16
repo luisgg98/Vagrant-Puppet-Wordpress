@@ -20,17 +20,10 @@
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'wordpress' );
-
-/** Database username */
-define( 'DB_USER', 'wordpress' );
-
-/** Database password */
-define( 'DB_PASSWORD', 'password');
-
-/** Database hostname */
-define( 'DB_HOST', 'localhost' );
-
+define('DB_NAME', '<%= scope.lookupvar('wpconfiguration::db_name') %>');
+define('DB_USER', '<%= scope.lookupvar('wpconfiguration::db_user') %>');
+define('DB_PASSWORD', '<%= scope.lookupvar('wpconfiguration::db_user_password') %>');
+define('DB_HOST', '<%= scope.lookupvar('wpconfiguration::db_host') %>');
 /** Database charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
 

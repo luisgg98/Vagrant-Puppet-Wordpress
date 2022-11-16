@@ -28,7 +28,7 @@ class wordpress {
 
     exec{
       "Configure Wordpress with WP CLI":
-      command => 'wp core install --url="http://127.0.0.1" --title="Herramientas de automatización de despliegues: Luis Garcia" --admin_user="wordpress" --admin_password="wordpress23*" --admin_email="lggarcia@gmail.com" --allow-root --path="/srv/www/wordpress"'
+      command => "wp core install --url='http://127.0.0.1' --title='Herramientas de automatización de despliegues: Luis Garcia' --admin_user='${wpconfiguration::admin_user}' --admin_password='${wpconfiguration::admin_pass}' --admin_email='${wpconfiguration::admin_mail}' --allow-root --path='/srv/www/wordpress'"
     }
 
 }
